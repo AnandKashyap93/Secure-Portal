@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, FileText, Trash2, Users, CheckSquare, Activity, LogOut, User as UserIcon } from 'lucide-react';
+import { FileText, Trash2, Users, CheckSquare, Activity, LogOut, User as UserIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import ProfileModal from '../components/ProfileModal';
 
