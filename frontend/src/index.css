@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: 15 23 42;
+    /* slate-900 */
+    --color-text: 241 245 249;
+    /* slate-100 */
+  }
+
+  :root.theme-light {
+    --color-bg: 248 250 252;
+    /* slate-50 */
+    --color-text: 15 23 42;
+    /* slate-900 */
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased transition-colors duration-500;
+  }
+
+  /* Force background transparency and text color for Chrome autofill */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+    transition: background-color 50000s ease-in-out 0s;
+    -webkit-text-fill-color: rgb(var(--color-text)) !important;
+  }
+}
