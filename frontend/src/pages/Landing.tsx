@@ -289,20 +289,6 @@ export default function Landing() {
                             <p className="text-lg font-light text-foreground/50 leading-relaxed max-w-lg">
                                 SecurePortal runs on a modern stack designed for high performance and absolute reliability. Our infrastructure relies on secure JWT authentication mechanisms, advanced anti-bot verification measures, and highly optimized data pipelines.
                             </p>
-                            
-                            <div className="mt-8 relative w-full xl:w-4/5 aspect-video rounded-xl overflow-hidden border border-foreground/10 group shadow-2xl">
-                                <div className="absolute inset-0 bg-blue-500/10 group-hover:bg-transparent transition-colors duration-500 z-10 mix-blend-overlay" />
-                                <img 
-                                    src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?q=80&w=2070&auto=format&fit=crop" 
-                                    alt="Technology Stack Code" 
-                                    className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-700"
-                                />
-                                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent z-10" />
-                                <div className="absolute bottom-4 left-6 z-20 flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                                    <span className="text-xs tracking-widest uppercase text-white font-medium">Systems Online</span>
-                                </div>
-                            </div>
 
                         </motion.div>
                         <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 1 }} className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 md:mt-0">
