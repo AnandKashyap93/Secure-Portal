@@ -33,11 +33,11 @@ export default function Register() {
     return (
         <div className="flex min-h-screen relative overflow-hidden bg-background text-foreground items-center justify-center py-12">
             {/* Cinematic Animated CSS Background */}
-            <div className="absolute inset-0 z-0 bg-gradient-to-tr from-black via-slate-900 to-black animate-gradient-xy opacity-90">
+            <div className="absolute inset-0 z-0 bg-gradient-to-tr from-black via-neutral-950 to-black animate-gradient-xy opacity-90">
                 {/* Minimalist animated particles/overlay effects */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#000_100%)] opacity-90" />
                 <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-slate-800/20 rounded-full blur-[100px] animate-pulse" />
-                <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-indigo-900/10 rounded-full blur-[100px] animate-pulse delay-1000" />
+                <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-neutral-900/10 rounded-full blur-[100px] animate-pulse delay-1000" />
             </div>
 
             <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col justify-center min-h-[80vh]">

@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { motion } from 'framer-motion';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
-import { FileUp, CheckCircle, XCircle, Clock, LogOut, AlertTriangle, User as UserIcon, Trash2 } from 'lucide-react';
+import { FileUp, CheckCircle, XCircle, Clock, LogOut, AlertTriangle, User as UserIcon, Trash2, FileText } from 'lucide-react';
 import ProfileModal from '../components/ProfileModal';
 import { format } from 'date-fns';
 
@@ -13,12 +13,24 @@ export default function UserDashboard() {
     const [uploading, setUploading] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest');
 
     const filteredDocs = documents.filter(doc =>
         doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.approverEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
         doc.status.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    ).sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+
+    const stats = {
+        total: documents.length,
+        pending: documents.filter(d => d.status === 'pending').length,
+        approved: documents.filter(d => d.status === 'approved').length,
+        rejected: documents.filter(d => d.status === 'rejected').length
+    };
 
     const [approverEmail, setApproverEmail] = useState('');
     const [isUrgent, setIsUrgent] = useState(false);
@@ -70,7 +82,7 @@ export default function UserDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-background to-slate-900 text-foreground font-sans overflow-hidden relative">
+        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-950 via-background to-neutral-950 text-foreground font-sans overflow-hidden relative">
             {/* Minimalist Background Layout */}
             <div className="absolute top-0 w-full h-96 bg-gradient-to-b from-blue-500/[0.08] to-transparent pointer-events-none" />
 
@@ -93,7 +105,7 @@ export default function UserDashboard() {
                                 <p className="text-sm font-light leading-none">{user?.name}</p>
                             </div>
                         </div>
-                        <div className="flex gap-4 border-l border-foreground/20 pl-6">
+                        <div className="flex gap-4 border-l border-foreground/20 pl-6 items-center">
                             <button onClick={() => setIsProfileOpen(true)} className="text-foreground/40 hover:text-foreground transition-colors" title="Settings">
                                 <UserIcon strokeWidth={1} width={20} />
                             </button>
@@ -103,6 +115,30 @@ export default function UserDashboard() {
                         </div>
                     </div>
                 </header>
+
+                {/* Global Statistics Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                    <div className="bg-foreground/[0.02] backdrop-blur-xl border border-foreground/10 rounded-3xl p-6 relative overflow-hidden group hover:border-blue-500/50 hover:bg-blue-500/[0.02] hover:-translate-y-1 transition-all duration-500">
+                        <FileText strokeWidth={1} className="text-foreground/30 mb-4 group-hover:text-blue-400 transition-colors relative z-10" size={20} />
+                        <h2 className="text-3xl font-light tracking-tighter text-foreground mb-1">{stats.total}</h2>
+                        <p className="text-foreground/40 text-[9px] uppercase tracking-[0.2em]">Total Uploads</p>
+                    </div>
+                    <div className="bg-foreground/[0.02] backdrop-blur-xl border border-foreground/10 rounded-3xl p-6 relative overflow-hidden group hover:border-amber-500/50 hover:bg-amber-500/[0.02] hover:-translate-y-1 transition-all duration-500">
+                        <Clock strokeWidth={1} className="text-foreground/30 mb-4 group-hover:text-amber-400 transition-colors relative z-10" size={20} />
+                        <h2 className="text-3xl font-light tracking-tighter text-foreground mb-1">{stats.pending}</h2>
+                        <p className="text-foreground/40 text-[9px] uppercase tracking-[0.2em]">Pending Review</p>
+                    </div>
+                    <div className="bg-foreground/[0.02] backdrop-blur-xl border border-foreground/10 rounded-3xl p-6 relative overflow-hidden group hover:border-green-500/50 hover:bg-green-500/[0.02] hover:-translate-y-1 transition-all duration-500">
+                        <CheckCircle strokeWidth={1} className="text-foreground/30 mb-4 group-hover:text-green-400 transition-colors relative z-10" size={20} />
+                        <h2 className="text-3xl font-light tracking-tighter text-foreground mb-1">{stats.approved}</h2>
+                        <p className="text-foreground/40 text-[9px] uppercase tracking-[0.2em]">Approved</p>
+                    </div>
+                    <div className="bg-foreground/[0.02] backdrop-blur-xl border border-foreground/10 rounded-3xl p-6 relative overflow-hidden group hover:border-red-500/50 hover:bg-red-500/[0.02] hover:-translate-y-1 transition-all duration-500">
+                        <XCircle strokeWidth={1} className="text-foreground/30 mb-4 group-hover:text-red-400 transition-colors relative z-10" size={20} />
+                        <h2 className="text-3xl font-light tracking-tighter text-foreground mb-1">{stats.rejected}</h2>
+                        <p className="text-foreground/40 text-[9px] uppercase tracking-[0.2em]">Rejected</p>
+                    </div>
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Left Column: Upload */}
@@ -159,14 +195,24 @@ export default function UserDashboard() {
                     <div className="lg:col-span-8 lg:pl-12 lg:border-l border-foreground/10">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 border-b border-foreground/10 pb-4">
                             <h2 className="text-xs uppercase tracking-[0.2em] font-light text-foreground/40 m-0">Document History</h2>
-                            <div className="relative w-full sm:w-64">
-                                <input
-                                    type="text"
-                                    placeholder="SEARCH DOCUMENTS..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-transparent border-b border-foreground/20 py-2 pl-2 pr-2 text-[10px] uppercase tracking-[0.2em] text-foreground placeholder:text-foreground/20 focus:border-foreground outline-none transition-colors"
-                                />
+                            <div className="flex items-center gap-4 w-full sm:w-auto">
+                                <select 
+                                    value={sortBy} 
+                                    onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest')}
+                                    className="bg-transparent border-b border-foreground/20 py-2 text-[10px] uppercase tracking-[0.2em] text-foreground focus:border-foreground outline-none transition-colors cursor-pointer *:bg-background *:text-foreground"
+                                >
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                </select>
+                                <div className="relative flex-1 sm:w-64">
+                                    <input
+                                        type="text"
+                                        placeholder="SEARCH DOCUMENTS..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="w-full bg-transparent border-b border-foreground/20 py-2 pl-2 pr-2 text-[10px] uppercase tracking-[0.2em] text-foreground placeholder:text-foreground/20 focus:border-foreground outline-none transition-colors"
+                                    />
+                                </div>
                             </div>
                         </div>
 

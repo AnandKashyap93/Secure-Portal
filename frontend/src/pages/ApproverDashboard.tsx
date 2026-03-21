@@ -13,12 +13,23 @@ export default function ApproverDashboard() {
     const [commentText, setCommentText] = useState('');
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [filter, setFilter] = useState<'pending' | 'reviewed' | 'all'>('pending');
+    const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest');
 
     const filteredDocs = documents.filter(doc => {
         if (filter === 'pending') return doc.status === 'pending';
         if (filter === 'reviewed') return doc.status !== 'pending';
         return true;
+    }).sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
     });
+
+    const stats = {
+        total: documents.length,
+        pending: documents.filter(d => d.status === 'pending').length,
+        reviewed: documents.filter(d => d.status !== 'pending').length,
+    };
 
     const fetchDocs = useCallback(async () => {
         const { data } = await api.get('/documents');
@@ -43,7 +54,7 @@ export default function ApproverDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-background to-slate-900 text-foreground font-sans overflow-hidden relative transition-colors duration-500">
+        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-950 via-background to-neutral-950 text-foreground font-sans overflow-hidden relative transition-colors duration-500">
             {/* Cinematic Minimalist Grid */}
             <div className="absolute inset-0 bg-transparent pointer-events-none z-0" />
             <div className="absolute top-0 w-full h-[50vh] bg-gradient-to-b from-blue-500/[0.05] to-transparent pointer-events-none z-0" />
@@ -67,7 +78,7 @@ export default function ApproverDashboard() {
                                 <p className="text-sm font-light leading-none">{user?.name}</p>
                             </div>
                         </div>
-                        <div className="flex gap-4 border-l border-foreground/20 pl-6">
+                        <div className="flex gap-4 border-l border-foreground/20 pl-6 items-center">
                             <button onClick={() => setIsProfileOpen(true)} className="text-foreground/40 hover:text-foreground transition-colors" title="Settings">
                                 <UserIcon strokeWidth={1} width={20} />
                             </button>
@@ -78,16 +89,46 @@ export default function ApproverDashboard() {
                     </div>
                 </header>
 
+                {/* Global Statistics Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div className="bg-foreground/[0.02] backdrop-blur-xl border border-foreground/10 rounded-3xl p-6 relative overflow-hidden group hover:border-blue-500/50 hover:bg-blue-500/[0.02] hover:-translate-y-1 transition-all duration-500">
+                        <FileText strokeWidth={1} className="text-foreground/30 mb-4 group-hover:text-blue-400 transition-colors relative z-10" size={20} />
+                        <h2 className="text-3xl font-light tracking-tighter text-foreground mb-1">{stats.total}</h2>
+                        <p className="text-foreground/40 text-[9px] uppercase tracking-[0.2em]">Total Assigned</p>
+                    </div>
+                    <div className="bg-foreground/[0.02] backdrop-blur-xl border border-foreground/10 rounded-3xl p-6 relative overflow-hidden group hover:border-amber-500/50 hover:bg-amber-500/[0.02] hover:-translate-y-1 transition-all duration-500">
+                        <Activity strokeWidth={1} className="text-foreground/30 mb-4 group-hover:text-amber-400 transition-colors relative z-10" size={20} />
+                        <h2 className="text-3xl font-light tracking-tighter text-foreground mb-1">{stats.pending}</h2>
+                        <p className="text-foreground/40 text-[9px] uppercase tracking-[0.2em]">Pending Review</p>
+                    </div>
+                    <div className="bg-foreground/[0.02] backdrop-blur-xl border border-foreground/10 rounded-3xl p-6 relative overflow-hidden group hover:border-green-500/50 hover:bg-green-500/[0.02] hover:-translate-y-1 transition-all duration-500">
+                        <CheckCircle strokeWidth={1} className="text-foreground/30 mb-4 group-hover:text-green-400 transition-colors relative z-10" size={20} />
+                        <h2 className="text-3xl font-light tracking-tighter text-foreground mb-1">{stats.reviewed}</h2>
+                        <p className="text-foreground/40 text-[9px] uppercase tracking-[0.2em]">Already Reviewed</p>
+                    </div>
+                </div>
+
                 <div className="mx-auto max-w-5xl space-y-8">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <h2 className="text-xs uppercase tracking-[0.2em] font-light text-foreground/50 flex items-center gap-4 m-0">
                             <span className="w-8 h-[1px] bg-foreground/20" /> {filter === 'pending' ? 'Pending Documents' : filter === 'reviewed' ? 'Review History' : 'All Documents'}
                         </h2>
 
-                        <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-medium border border-foreground/10 p-1 rounded-full bg-foreground/[0.02] backdrop-blur-md">
-                            <button onClick={() => setFilter('pending')} className={`px-6 py-2 transition-all rounded-full ${filter === 'pending' ? 'bg-foreground text-background shadow-lg' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'}`}>Pending</button>
-                            <button onClick={() => setFilter('reviewed')} className={`px-6 py-2 transition-all rounded-full ${filter === 'reviewed' ? 'bg-foreground text-background shadow-lg' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'}`}>Reviewed</button>
-                            <button onClick={() => setFilter('all')} className={`px-6 py-2 transition-all rounded-full ${filter === 'all' ? 'bg-foreground text-background shadow-lg' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'}`}>All</button>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                            <select 
+                                value={sortBy} 
+                                onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest')}
+                                className="bg-transparent border-b border-foreground/20 py-2 text-[10px] uppercase tracking-[0.2em] text-foreground focus:border-foreground outline-none transition-colors cursor-pointer *:bg-background *:text-foreground"
+                            >
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                            </select>
+
+                            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-medium border border-foreground/10 p-1 rounded-full bg-foreground/[0.02] backdrop-blur-md">
+                                <button onClick={() => setFilter('pending')} className={`px-6 py-2 transition-all rounded-full ${filter === 'pending' ? 'bg-foreground text-background shadow-lg' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'}`}>Pending</button>
+                                <button onClick={() => setFilter('reviewed')} className={`px-6 py-2 transition-all rounded-full ${filter === 'reviewed' ? 'bg-foreground text-background shadow-lg' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'}`}>Reviewed</button>
+                                <button onClick={() => setFilter('all')} className={`px-6 py-2 transition-all rounded-full ${filter === 'all' ? 'bg-foreground text-background shadow-lg' : 'text-foreground/50 hover:text-foreground hover:bg-foreground/5'}`}>All</button>
+                            </div>
                         </div>
                     </div>
 

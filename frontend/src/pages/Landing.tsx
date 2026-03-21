@@ -14,7 +14,7 @@ const Nav = () => {
     }, []);
 
     return (
-        <nav className={`fixed w-full z-50 transition-all duration-700 ${scrolled ? 'bg-background/80 backdrop-blur-2xl py-4' : 'bg-transparent py-8'}`}>
+        <nav className={`fixed w-full z-50 transition-all duration-700 ${scrolled ? 'bg-transparent backdrop-blur-2xl py-4' : 'bg-transparent py-8'}`}>
             <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
                 <Link to="/" className="flex items-center gap-4 group">
                     <div className="w-8 h-8 flex items-center justify-center text-foreground">
@@ -90,17 +90,17 @@ const Hero = () => {
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-6xl md:text-8xl lg:text-[7rem] font-light tracking-tighter text-foreground mb-8 leading-[1.1]"
+                    className="text-6xl md:text-8xl lg:text-[7rem] font-extralight tracking-tighter text-foreground mb-8 leading-[1.1] whitespace-nowrap"
                 >
-                    Secure <br className="md:hidden" /> Document Approval.
+                    Secure Document Approval.
                 </motion.h1>
                 <motion.p
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-lg md:text-2xl font-light text-foreground/70 max-w-3xl mx-auto mb-16 tracking-wide leading-relaxed"
+                    className="text-lg md:text-2xl font-extralight text-foreground/70 max-w-4xl mx-auto mb-16 tracking-wide leading-relaxed"
                 >
-                    A secure and simple way to upload, review, and approve documents for your organization.
+                    A secure and simple way to upload, review, and approve documents for <br className="hidden md:block" /> your organization.
                 </motion.p>
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}

@@ -31,7 +31,7 @@ export default function Login() {
     return (
         <div className="flex min-h-screen relative overflow-hidden bg-background text-foreground items-center justify-center">
             {/* Cinematic Animated CSS Background */}
-            <div className="absolute inset-0 z-0 bg-gradient-to-br from-indigo-900 via-black to-slate-900 animate-gradient-xy opacity-80">
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-neutral-900 via-black to-neutral-950 animate-gradient-xy opacity-80">
                 {/* Minimalist animated particles/overlay effects */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#000_100%)] opacity-90" />
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-75" />

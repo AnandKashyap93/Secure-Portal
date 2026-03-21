@@ -52,7 +52,7 @@ export default function AdminDashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-background to-slate-900 text-foreground font-sans overflow-hidden relative transition-colors duration-500">
+        <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-950 via-background to-neutral-950 text-foreground font-sans overflow-hidden relative transition-colors duration-500">
             {/* Cinematic Minimalist Layout */}
             <div className="absolute top-0 w-full h-96 bg-gradient-to-b from-blue-500/[0.08] to-transparent pointer-events-none" />
 
